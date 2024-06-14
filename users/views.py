@@ -5,11 +5,12 @@ from django.contrib.auth.decorators import login_required
 from .models import User
 from .services import is_email_used, is_username_used
 from .errors import UsedMailError, UsedUserNameError
+from .const import routes
 
 
-def edit(req):
+def user(req):
     if req.method == "GET":
-        return edit_page(req)
+        return user_page(req)
     elif req.method == "POST":
         return edit_user(req)
 
@@ -40,7 +41,7 @@ def create_user(req):
         password_2 = req.POST["password_2"]
     except KeyError:
         errors["full_error"] = "The Fields are invalid"
-        return render(req, "pages/signup.html", errors)
+        return render(req, "users/signup.html", errors)
 
     if username == "":
         errors["username_error"] = "The User Name cant be null"
@@ -71,7 +72,7 @@ def create_user(req):
         errors["username_error"] = " The User Name is used"
 
     if errors:
-        return render(req, "pages/signup.html", errors)
+        return render(req, "users/signup.html", errors)
 
     user = User.objects.create_user(
         username=username,
@@ -93,7 +94,7 @@ def login_user(req):
         password = req.POST["password"]
     except KeyError:
         errors["full_error"] = "The Fields are invalid"
-        return render(req, "pages/login.html", errors)
+        return render(req, "users/login.html", errors)
 
     if username == "":
         errors["username_error"] = "The User Name cant be null"
@@ -102,16 +103,16 @@ def login_user(req):
         errors["password_error"] = "The Password cant be null"
 
     if errors:
-        return render(req, "pages/login.html", errors)
+        return render(req, "users/login.html", errors)
 
     user = authenticate(req, username=username, password=password)
 
     if user != None:
         login_func(req, user)
-        return redirect("user_profile")
+        return redirect("user")
     else:
         errors["full_error"] = "Invalid username or password"
-        return render(req, "pages/login.html", errors)
+        return render(req, "users/login.html", errors)
 
 
 @login_required
@@ -122,63 +123,89 @@ def logout(req):
 
 def edit_user(req):
     error: str = ""
+    id = req.POST.get("id")
 
-    field = req.POST.get("field")
-    new_value = req.POST.get(field)
-    username = req.POST.get("user")
+    username = req.POST.get("username")
+    first_name = req.POST.get("first_name")
+    last_name = req.POST.get("last_name")
+    email = req.POST.get("email")
 
-    if not new_value:
-        error = "The field cant be null"
+    field = (
+        "username"
+        if username
+        else "first_name" if first_name else "last_name" if last_name else "email"
+    )
+    value = (
+        username
+        if username
+        else first_name if first_name else last_name if last_name else email
+    )
 
-    if field == "username":
+    if username:
         try:
-            is_username_used(new_value)
-
+            is_username_used(username)
         except UsedUserNameError:
             error = "The User name is alredy in use"
 
-    if field == "email":
+    if email:
         try:
-            is_email_used(new_value)
+            is_email_used(email)
         except UsedMailError:
             error = "The Email is alredy in use"
 
     if error:
-        return render(req, "pages/edit.html", {"error": error, "field": field})
+        print(error)
+        return render(
+            req,
+            "users/user.html",
+            {"routes": routes, "active": "User"},
+        )
 
     try:
-        user = User.objects.get(username=username)
-        setattr(user, field, new_value)
+        user = User.objects.get(id=id)
+        setattr(user, field, value)
         user.save()
-        return redirect("user_profile")
+        return redirect("user")
 
     except User.DoesNotExist:
-        return redirect("user_profile")
+        return redirect("user")
 
 
 # Páginas para el front
 def home_page(req):
-    return render(req, "pages/home.html", {})
+    return render(req, "users/home.html", {"routes": routes, "active": "Home"})
 
 
 def login_page(req):
-    return render(req, "pages/login.html", {})
+    return render(req, "users/login.html", {"title": "Iniciar Seción"})
 
 
 def signup_page(req):
-    return render(req, "pages/signup.html", {})
+    return render(req, "users/signup.html", {"title": "Registrarse"})
 
 
 @login_required
 def user_page(req):
-    return render(req, "pages/user.html", {})
+    data = {
+        "routes": routes,
+        "active": "User",
+    }
+    return render(req, "users/user.html", data)
 
 
 @login_required
-def edit_page(req):
-    field = req.GET.get("field")
-    if not field:
-        return redirect("user_profile")
+def dashboard(req):
+    data = {
+        "routes": routes,
+        "active": "Dashboard",
+    }
+    return render(req, "users/dashboard.html", data)
 
-    else:
-        return render(req, "pages/edit.html", {"field": field})
+
+@login_required
+def example(req):
+    return render(
+        req,
+        "users/example.html",
+        {"routes": routes, "active": "app1"},
+    )

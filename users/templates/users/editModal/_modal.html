@@ -1,0 +1,33 @@
+{% block content %}
+
+<div class="modal fade" id="modal-{{ modal_id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel-{{ modal_id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalLabel-{{ modal_id }}">Edit {{ edit_field }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form data-modal-form="true" action="{% url 'user' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            <label for="{{ modal_id }}" class="form-label">{{ edit_field }}</label>
+            {% if modal_id == "email" %}
+            <input type="email" name="{{ modal_id }}" id="{{ modal_id }}" class="form-control w-100" value="{{ modal_value }}" required>
+            {% else %}
+            <input type="text" name="{{ modal_id }}" id="{{ modal_id }}" class="form-control w-100" value="{{ modal_value }}" required>
+            {% endif %} 
+            {% if error %}
+            <div class="form-text">{{ error }} </div>
+            {% endif %}
+            <input type="hidden" name="id" value="{{ user_id }}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

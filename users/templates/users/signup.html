@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}
+Sign Up
+{% endblock %}
+{% block content %}
+<!-- Section: Design Block -->
+<main class="text-center">
+  <!-- Background image -->
+  <div class="p-5 bg-image" style="
+        background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+        height: 300px;
+        "></div>
+  <!-- Background image -->
+
+  <div class="container">
+    <div class="card mx-4 mx-md-5 shadow-5-strong bg-body-tertiary" style="
+        margin-top: -100px;
+        ">
+      <div class="card-body py-5 px-md-5">
+
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-5">Sign up now</h2>
+            {{full_error}}
+            <form class="" action="{% url 'signup' %}" method="POST">
+              {% csrf_token %}
+              <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="username">User Name</label>
+                <input type="text" name="username" class="form-control" id="username" required />
+                {% if username_error %}
+                <p class="text-danger">{{username_error}}</p>
+                {% endif %}
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init class="form-outline">
+                    <label class="form-label" for="first_name">First Name</label>
+                    <input type="text" name="first_name" class="form-control" id="first_name" required />
+                    {% if first_name_error %}
+                    <p class="text-danger">{{first_name_error}}</p>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init class="form-outline">
+                    <label class="form-label" for="last_name">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" id="last_name" required />
+                    {% if last_name_error %}
+                    <p class="text-danger">{{last_name_error}}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Password input -->
+              <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="email">Your Email</label>
+                <input type="email" name="email" class="form-control" id="email" required />
+                {% if email_error %}
+                <p class="text-danger">{{email_error}}</p>
+                {% endif %}
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init class="form-outline">
+                    <label class="form-label" for="password_1">Password</label>
+                    <input type="password" name="password_1" class="form-control" id="password_1" required />
+                    {% if password_error %}
+                    <p class="text-danger">{{password_error}}</p>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init class="form-outline">
+                    <label class="form-label" for="password_2">Repeat your password</label>
+                    <input type="password" name="password_2" class="form-control" id="password_2" required />
+                    {% if passwords_error %}
+                    <p class="text-danger">{{passwords_error}}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-column flex-md-row justify-content-evenly">
+                <p class="mb-3">
+                  Alredy have an account?
+                  <a href="{% url 'login' %}" class="text-body fw-bold">Log In</a>
+                </p>
+              </div>
+
+              <!-- Checkbox -->
+              <div class="form-check d-flex justify-content-center mb-4">
+                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
+                <label class="form-check-label" for="form2Example33">
+                  Accept <span><a href="">terms and conditions</a></span>
+                </label>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+                Sign up
+              </button>
+
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
