@@ -1,0 +1,30 @@
+{% extends "users/base.html" %}
+
+{% block title %}
+Auditorias Asignadas
+{% endblock %}
+
+{% block main_content %}
+    <main class="h-100 w-100 ms-sm-auto p-md-5 overflow-y-auto">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+           {% if auditorias_asignadas %}
+           <h2>Auditorias Asignadas</h2>
+
+           <ul>
+            {% for auditoria in auditorias_asignadas %}
+            <li>
+                <h3>{{ auditoria.title }}</h3>
+                <p>
+                    {{ auditoria.description }}
+                </p>
+                <button>Hacer algo</button>
+                <a href="">Llevar a algún lado</a>
+            </li>
+            {% endfor %}
+           </ul>
+           {% else %}
+           <h2>No tiene auditorias asignadas por el momento</h2>
+           {% endif %}
+        </div>
+    </main>
+{% endblock %}

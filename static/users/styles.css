@@ -1,10 +1,4 @@
 
-body[data-bs-theme="ligth"]{
-    background-color: #f0f0f0 !important
-}
-body[data-bs-theme="dark"]{
-    background-color: rgb( 33, 37, 41) !important
-}
 
 .max-h-screen{
     max-height: 100vh !important;

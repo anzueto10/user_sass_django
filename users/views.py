@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout as logout_func
 from django.contrib.auth import login as login_func
 from django.contrib.auth.decorators import login_required
-from .models import User
+from .models import User, Auditoria
 from .services import is_email_used, is_username_used
 from .errors import UsedMailError, UsedUserNameError
-from .const import routes
+from .decorators import jefe_auditoria_required
 
 
 def user(req):
@@ -29,6 +29,13 @@ def signup(req):
         return create_user(req)
 
 
+def auditorias_asignadas(req):
+    if req.method == "GET":
+        return auditorias_asignadas_page(req)
+    elif req.method == "POST":
+        return create_auditoria()
+
+
 # Funciones back-end
 def create_user(req):
     errors = {}
@@ -41,7 +48,7 @@ def create_user(req):
         password_2 = req.POST["password_2"]
     except KeyError:
         errors["full_error"] = "The Fields are invalid"
-        return render(req, "users/signup.html", errors)
+        return render(req, "signup.html", errors)
 
     if username == "":
         errors["username_error"] = "The User Name cant be null"
@@ -72,7 +79,7 @@ def create_user(req):
         errors["username_error"] = " The User Name is used"
 
     if errors:
-        return render(req, "users/signup.html", errors)
+        return render(req, "signup.html", errors)
 
     user = User.objects.create_user(
         username=username,
@@ -94,7 +101,7 @@ def login_user(req):
         password = req.POST["password"]
     except KeyError:
         errors["full_error"] = "The Fields are invalid"
-        return render(req, "users/login.html", errors)
+        return render(req, "login.html", errors)
 
     if username == "":
         errors["username_error"] = "The User Name cant be null"
@@ -158,7 +165,7 @@ def edit_user(req):
         return render(
             req,
             "users/user.html",
-            {"routes": routes, "active": "User"},
+            {"active": "User"},
         )
 
     try:
@@ -171,9 +178,13 @@ def edit_user(req):
         return redirect("user")
 
 
+def create_auditoria(req):
+    pass
+
+
 # Páginas para el front
 def home_page(req):
-    return render(req, "users/home.html", {"routes": routes, "active": "Home"})
+    return render(req, "users/home.html", {"active": "Home"})
 
 
 def login_page(req):
@@ -187,7 +198,6 @@ def signup_page(req):
 @login_required
 def user_page(req):
     data = {
-        "routes": routes,
         "active": "User",
     }
     return render(req, "users/user.html", data)
@@ -196,16 +206,21 @@ def user_page(req):
 @login_required
 def dashboard(req):
     data = {
-        "routes": routes,
         "active": "Dashboard",
     }
     return render(req, "users/dashboard.html", data)
 
 
 @login_required
-def example(req):
-    return render(
-        req,
-        "users/example.html",
-        {"routes": routes, "active": "app1"},
-    )
+def auditorias_asignadas_page(req):
+    auditorias = req.user.auditorias_asignadas.all()
+    data = {"active": "Auditorias", "auditorias_asignadas": auditorias}
+    return render(req, "users/auditorias.html", data)
+
+
+@login_required
+@jefe_auditoria_required
+def gestionar_auditores_page(req):
+    # lógica para manejar los datos
+    data = {"active": "Gestionar"}
+    return render(req, "users/gestionarAuditores.html", data)

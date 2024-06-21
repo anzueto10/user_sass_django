@@ -8,9 +8,10 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("logout/", views.logout, name="logout"),
     path("dashboard/", views.dashboard, name="dashboard"),
-    path("app1/", views.example, name="app1"),
-    path("app2/", views.example, name="app2"),
-    path("app3/", views.example, name="app3"),
-    path("app4/", views.example, name="app4"),
-    path("app5/", views.example, name="app5"),
+    path("auditorias/", views.auditorias_asignadas, name="auditorias_asignadas"),
+    path(
+        "gestionar_auditores/",
+        views.gestionar_auditores_page,
+        name="gestionar_auditores",
+    ),
 ]
