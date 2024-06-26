@@ -5,26 +5,31 @@ Auditorias Asignadas
 {% endblock %}
 
 {% block main_content %}
-    <main class="h-100 w-100 ms-sm-auto p-md-5 overflow-y-auto">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-           {% if auditorias_asignadas %}
-           <h2>Auditorias Asignadas</h2>
+<main class="h-100 w-100 ms-sm-auto p-md-4 overflow-y-auto">
+    <div class="d-flex justify-content-between flex-wrap flex-column flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        {% if auditorias_asignadas %}
+        <h2 class="mb-4 display-6">Auditorias Asignadas</h2>
 
-           <ul>
+        <ul class="list-unstyled gap-5 d-flex flex-column">
             {% for auditoria in auditorias_asignadas %}
-            <li>
-                <h3>{{ auditoria.title }}</h3>
-                <p>
-                    {{ auditoria.description }}
-                </p>
-                <button>Hacer algo</button>
-                <a href="">Llevar a algún lado</a>
+
+            <li class="card">
+                <h5 class="card-header">Empresa - {{ auditoria.company }}</h5>
+                <div class="card-body">
+                    <h5 class="card-title">{{ auditoria.title }}</h5>
+                    <p class="card-text"> {{ auditoria.description }}</p>
+                    <div class="w-100 d-flex gap-3 flex-column flex-md-row justify-content-md-start">
+                        <a class="btn border border-primary text-primary">Detalles</a>
+                        <a href="" class="btn btn-primary">Realizar</a>
+                    </div>
+                </div>
             </li>
+            
             {% endfor %}
-           </ul>
-           {% else %}
-           <h2>No tiene auditorias asignadas por el momento</h2>
-           {% endif %}
-        </div>
-    </main>
+        </ul>
+        {% else %}
+        <h2>No tiene auditorias asignadas por el momento</h2>
+        {% endif %}
+    </div>
+</main>
 {% endblock %}

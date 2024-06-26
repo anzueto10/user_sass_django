@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import User
 from django.contrib.auth.admin import UserAdmin
+from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
+    model = User
+
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name", "email")}),
@@ -20,9 +22,9 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
-        ("Auditorias", {"fields": ("auditorias_asignadas",)}),
         ("Role", {"fields": ("role",)}),
     )
+
     add_fieldsets = (
         (
             None,
@@ -42,9 +44,24 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("username", "email", "first_name", "last_name", "is_staff", "role")
+
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "role",
+        "display_auditorias_asignadas",
+    )
     search_fields = ("email", "username", "first_name", "last_name")
     ordering = ("email",)
+
+    def display_auditorias_asignadas(self, obj):
+        auditorias = obj.auditorias_asignadas
+        return "\n".join([f"{a['title']} - {a['company']}" for a in auditorias])
+
+    display_auditorias_asignadas.short_description = "Auditorias Asignadas"
 
 
 admin.site.register(User, CustomUserAdmin)

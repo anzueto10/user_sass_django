@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout as logout_func
 from django.contrib.auth import login as login_func
 from django.contrib.auth.decorators import login_required
-from .models import User, Auditoria
+from .models import User
 from .services import is_email_used, is_username_used
 from .errors import UsedMailError, UsedUserNameError
 from .decorators import jefe_auditoria_required
@@ -213,7 +213,7 @@ def dashboard(req):
 
 @login_required
 def auditorias_asignadas_page(req):
-    auditorias = req.user.auditorias_asignadas.all()
+    auditorias = req.user.auditorias_asignadas
     data = {"active": "Auditorias", "auditorias_asignadas": auditorias}
     return render(req, "users/auditorias.html", data)
 
