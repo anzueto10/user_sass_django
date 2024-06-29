@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "common",
     "users",
     "notifications",
+    "auditorias",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,10 @@ TEMPLATES = [
             os.path.join(
                 BASE_DIR,
                 "users/templates",
+            ),
+            os.path.join(
+                BASE_DIR,
+                "auditorias/templates",
             ),
         ],
         "APP_DIRS": True,
@@ -108,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es"
 
 TIME_ZONE = "UTC"
 
@@ -137,4 +143,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
 LOGIN_URL = "login"
+
+DATE_FORMAT = "d/m/Y"

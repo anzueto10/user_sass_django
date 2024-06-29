@@ -58,8 +58,11 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("email",)
 
     def display_auditorias_asignadas(self, obj):
-        auditorias = obj.auditorias_asignadas
-        return "\n".join([f"{a['title']} - {a['company']}" for a in auditorias])
+        auditorias = obj.auditorias_asignadas.all()
+        if auditorias:
+            return "\n".join([f"{a['title']} - {a['company']}" for a in auditorias])
+        else:
+            return "No hay auditorias asignadas."
 
     display_auditorias_asignadas.short_description = "Auditorias Asignadas"
 

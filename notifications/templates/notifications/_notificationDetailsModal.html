@@ -1,0 +1,29 @@
+{% load filters %}
+<div class="modal fade" id="detailsModal{{ notification_status.notification.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ notification_status.notification.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel{{ notification_status.notification.id }}">Detalles de la Notificación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nota:</strong> {{ notification_status.notification.note }}</p>
+                <p><strong>Auditoría:</strong> {{ notification_status.notification.auditoria }}</p>
+                <p><strong>De:</strong> {{ notification_status.notification.notifier.get_full_name }}</p>
+                <p><strong>Fecha de creación:</strong> {{ notification_status.notification.created_at|format_date }}</p>
+                {% if notification_status.is_read %}
+                    <p><strong>Leída en:</strong> {{ notification_status.readed_date|format_date }}</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                {% if not notification_status.is_read %}
+                    <form action="{% url 'mark_notification_as_read' notification_status.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Marcar como Leída</button>
+                    </form>
+                {% endif %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

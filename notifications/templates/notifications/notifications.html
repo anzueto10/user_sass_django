@@ -4,10 +4,70 @@
 Notificaciones
 {% endblock %}
 
-{% block content %}
-        <main class="d-flex flex-column ms-sm-auto p-5">
-            <h1>Notificaciones</h1>
-        </main>
+{% block styles %}
+<style>
+    .readed {
+        border-left: 5px solid rgb(108, 117, 125);
+    }
+    
+    .not-readed {
+        border-left: 5px solid #007bff;
+    }
+</style>
+{% endblock %}
+
+{% load filters %}
+
+{% block main_content %}
+<main class="d-flex flex-column ms-sm-auto p-5">
+    <div class="d-flex justify-content-between flex-wrap flex-column flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        {% if notifications %}
+        <h2 class="mb-4 display-6">Notificaciones</h2>
+        <div class="ml-auto mb-5">
+            {% include "notifications/_notificationsDropdownFilter.html" %}
+        </div>
+        <ul class="list-group gap-5 container" style="list-style: none;">
+            {% for notification_status in notifications %}
+
+            {% if filter == "readed" and notification_status.is_read or filter == "not_readed" and not notification_status.is_read or not filter %}
+            <li class="rounded bg-light-subtle p-3 shadow {% if notification_status.is_read %}readed{% else %}not-readed{% endif %}">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+
+                    <h5 class="fs-5 fw-bold m-0">Auditoría: {{ notification_status.notification.auditoria }}</h5>
+                    {% if notification_status.is_read %}
+                    <h5><span class="badge bg-secondary rounded-pill">Leída</span>
+                    </h5>
+                    {% else %}
+                    <h5><span class="badge bg-primary rounded-pill">No leída</span></h5>
+                    {% endif %}
+                </div>
+                <div class="mb-2">
+                    <p class="fs-6 mb-2" style="line-height: 1.5;">{{ notification_status.notification.note }}</p>
+                    <p class="text-body-secondary mb-1" style="font-size: 0.9rem;">De: {{ notification_status.notification.notifier.get_full_name }}</p>
+                    <p class="text-body-secondary mb-1" style="font-size: 0.9rem;">{{ notification_status.notification.created_at|format_date }}</p>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ notification_status.notification.id }}">Detalles</button>
+
+                </div>
+            </li>
+            {% endif %}
+
+            {% with notification_status=notification_status filter=filter %}
+                {% include "notifications/_notificationDetailsModal.html" %}
+            {% endwith %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h2 class="mb-4 display-6">No tiene notificaciones pendientes</h2>
+        {% endif %}
+        <div class="mt-4">
+            <a href="{% url 'create_notification' %}" class="btn btn-primary btn-lg">Enviar Notificación</a>
+        </div>
     </div>
-</div>
+
+    
+</main>
+
+
 {% endblock %}

@@ -1,0 +1,31 @@
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      {% if filter == "readed" %}
+      Leídas
+      {% elif filter == "not_readed" %}
+      No leidas
+      {% else %}
+      Filtrar Por
+      {% endif %}
+    </button>
+    <ul class="dropdown-menu">
+        {% if not filter %}
+        <li><a class="dropdown-item active" href="{% url 'notifications' %}">Todas</a></li>
+        {% else %}
+        <li><a class="dropdown-item" href="{% url 'notifications' %}">Todas</a></li>
+        {% endif %}
+
+        {% if filter == "readed" %}
+        <li><a class="dropdown-item active" href="{% url 'notifications' %}?filter=readed">Leídas</a></li>
+        {% else %}
+        <li><a class="dropdown-item" href="{% url 'notifications' %}?filter=readed">Leídas</a></li>
+        {% endif %}
+
+        {% if filter == "not_readed" %}
+        <li><a class="dropdown-item active" href="{% url 'notifications' %}?filter=not_readed">No leídas</a></li>
+        {% else %}
+        <li><a class="dropdown-item" href="{% url 'notifications' %}?filter=not_readed">No leídas</a></li>
+        {% endif %}
+
+    </ul>
+  </div>

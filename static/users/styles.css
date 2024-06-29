@@ -1,37 +1,39 @@
+html[data-bs-theme="light"] body {
+    background-color: #f3f3f3;
+}
 
-
-.max-h-screen{
+.max-h-screen {
     max-height: 100vh !important;
 }
 
-.max-h-100{
+.max-h-100 {
     max-height: 100%;
 }
 
-.overflow-hidden{
+.overflow-hidden {
     overflow: hidden;
 }
 
-.min-h-screen{
+.min-h-screen {
     min-height: 100vh;
 }
 
-.min-h-100{
+.min-h-100 {
     min-height: 100%;
 }
 
-.w-1{
+.w-1 {
     width: .75rem;
 }
 
-.h-1{
-    height:.75rem;
+.h-1 {
+    height: .75rem;
 }
 
-.ml-auto{
+.ml-auto {
     margin-left: auto;
 }
 
-.mr-5{
+.mr-5 {
     margin-right: .75rem;
 }

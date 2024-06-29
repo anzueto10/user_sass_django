@@ -1,4 +1,4 @@
-{% extends "users/base.html" %}
+{% extends "auditorias/base.html" %}
 
 {% block title %}
 Auditorias Asignadas
@@ -28,7 +28,7 @@ Auditorias Asignadas
             {% endfor %}
         </ul>
         {% else %}
-        <h2>No tiene auditorias asignadas por el momento</h2>
+        <h4 class="mb-4 display-6">No tiene auditorias asignadas por el momento</h4>
         {% endif %}
     </div>
 </main>

@@ -3,9 +3,8 @@ from django.contrib.auth import authenticate, logout as logout_func
 from django.contrib.auth import login as login_func
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .services import is_email_used, is_username_used
+from .utils import is_email_used, is_username_used
 from .errors import UsedMailError, UsedUserNameError
-from .decorators import jefe_auditoria_required
 
 
 def user(req):
@@ -29,14 +28,8 @@ def signup(req):
         return create_user(req)
 
 
-def auditorias_asignadas(req):
-    if req.method == "GET":
-        return auditorias_asignadas_page(req)
-    elif req.method == "POST":
-        return create_auditoria()
-
-
 # Funciones back-end
+@login_required
 def create_user(req):
     errors = {}
     try:
@@ -128,6 +121,7 @@ def logout(req):
     return redirect("home")
 
 
+@login_required
 def edit_user(req):
     error: str = ""
     id = req.POST.get("id")
@@ -162,11 +156,7 @@ def edit_user(req):
 
     if error:
         print(error)
-        return render(
-            req,
-            "users/user.html",
-            {"active": "User"},
-        )
+        return redirect("user_profile")
 
     try:
         user = User.objects.get(id=id)
@@ -178,49 +168,24 @@ def edit_user(req):
         return redirect("user")
 
 
-def create_auditoria(req):
-    pass
-
-
 # Páginas para el front
 def home_page(req):
-    return render(req, "users/home.html", {"active": "Home"})
+    return render(req, "users/home.html", {})
 
 
 def login_page(req):
-    return render(req, "users/login.html", {"title": "Iniciar Seción"})
+    return render(req, "users/login.html", {})
 
 
 def signup_page(req):
-    return render(req, "users/signup.html", {"title": "Registrarse"})
+    return render(req, "users/signup.html", {})
 
 
 @login_required
 def user_page(req):
-    data = {
-        "active": "User",
-    }
-    return render(req, "users/user.html", data)
+    return render(req, "users/user.html", {})
 
 
 @login_required
 def dashboard(req):
-    data = {
-        "active": "Dashboard",
-    }
-    return render(req, "users/dashboard.html", data)
-
-
-@login_required
-def auditorias_asignadas_page(req):
-    auditorias = req.user.auditorias_asignadas
-    data = {"active": "Auditorias", "auditorias_asignadas": auditorias}
-    return render(req, "users/auditorias.html", data)
-
-
-@login_required
-@jefe_auditoria_required
-def gestionar_auditores_page(req):
-    # lógica para manejar los datos
-    data = {"active": "Gestionar"}
-    return render(req, "users/gestionarAuditores.html", data)
+    return render(req, "users/dashboard.html", {})

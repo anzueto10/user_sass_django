@@ -1,0 +1,73 @@
+{% extends "notifications/base.html" %}
+
+{% block title %}
+Crear Notificación
+{% endblock %}
+
+{% block main_content %}
+
+<main class="d-flex flex-column ms-sm-auto p-5 h-100">
+        {% if notification_pushed == "pushed" %}
+            {% with push_state=notification_pushed %}
+                {% include "notifications/_notificationPushedAlert.html" with push_state=push_state %}
+            {% endwith %}
+        {% elif notification_pushed == "not_pushed" %}
+            {% with push_state=notification_pushed %}
+                {% include "notifications/_notificationPushedAlert.html" with push_state=push_state %}
+            {% endwith %}
+        {% endif %}
+    <div class="d-flex justify-content-between flex-wrap flex-column flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        <h2 class="display-6 mb-5">Crear Notificación</h2>
+        <div class="container mt-5 p-md-4 p-2 bg-light-subtle shadow-lg rounded">
+            <h2 class="mb-4">Notificación</h2>
+            <form action="{% url 'create_notification' %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="notifieds_users" class="form-label">Destinatario</label>
+                    <select id="notifieds_users" name="notifieds_users" multiple="multiple" class="form-control">
+                        {% for notified in notifieds %}
+                        <option value="{{ notified.username }}">{{ notified.get_full_name }} - {{ notified.role }} </option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.invalid_notified %}
+                    <span class="text-danger">{{errors.invalid_notified}}</span>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="auditoria" class="form-label">Auditoria</label>
+                    <select class="form-select" aria-label="auditoria" id="auditoria_id" name="auditoria_id">
+                        <option selected>Seleccione la auditoria relacionada</option>
+                        {% for auditoria in user.auditorias_asignadas.all %}
+                        <option value="{{ auditoria.id }}">{{ auditoria.title }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.invalid_auditoria %}
+                    <span class="text-danger">{{errors.invalid_auditoria}}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Nota</label>
+                    <textarea class="form-control" id="note" rows="5" name="notification_note" placeholder="Realizar cierta tarea..."
+                        style="resize: none;" required></textarea>
+                    {% if errors.invalid_note %}
+                    <span class="text-danger">{{ errors.invalid_note}}</span>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+        $('#notifieds_users').select2({
+            placeholder: "Usarios que serán notificados",
+            allowClear: true
+        });
+    });
+    </script>
+{% endblock %}

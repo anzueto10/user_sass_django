@@ -1,0 +1,7 @@
+{% if notification_pushed is not None %}
+<div class="alert alert-{% if notification_pushed %}success{% else %}danger{% endif %} alert-dismissible fade show" role="alert">
+    <strong>{{ user.get_full_name }}</strong> {% if notification_pushed %}Su notificación ha sido creada exitosamente.{% else %}Ha ocurrido un error y su notificación no se ha creado. Por favor, inténtelo de nuevo.{% endif %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+</div>
+{% endif %}
